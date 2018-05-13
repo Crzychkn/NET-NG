@@ -2,15 +2,4 @@
    <li *ngFor="let item of items" (click)="onSelect(item)" [class.selected]="item === selectedItem">{{item.id}}: {{item.name}}</li>
 </ul>
 
-
-<div *ngIf="selectedItem">
-
-   <h2> {{ selectedItem.name }} Details</h2>
-   <div>
-      <label>Name:
-
-      <input [(ngModel)]="selectedItem.name" placeholder="name">
-      </label>
-     </div>
-
-</div>
+<app-item-detail [item]="selectedItem"></app-item-detail>
