@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Item } from './Item';
-import { ITEMS } from './mock-items';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -12,7 +11,7 @@ export class ItemService {
 
    getItems(): Observable<Item[]> {
       this.messageService.add('ItemService: Fetched To Do List');
-      return of(ITEMS);
+      return this.http.get<Item[]>(this.itemsUrl);
    }
 
 	getItem(id: number): Observable<Item> {
@@ -24,7 +23,7 @@ export class ItemService {
       this.messageService.add('ItemService: ' + message);
    }
 
-   private itemsUrl = 'api/items';
+   private itemsUrl = 'http://localhost:5000/api/todo';
 
    constructor(
       private http: HttpClient,
