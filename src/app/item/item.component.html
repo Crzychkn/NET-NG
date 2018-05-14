@@ -1,5 +1,8 @@
 <ul class="items">
-   <li *ngFor="let item of items" (click)="onSelect(item)" [class.selected]="item === selectedItem">{{item.id}}: {{item.name}}</li>
+	<li *ngFor="let item of items">
+		<a routerLink="/detail/{{item.id}}">
+			<span class="badge">{{item.id}}:</span> {{item.name}}
+		</a>
+	</li>
 </ul>
 
-<app-item-detail [item]="selectedItem"></app-item-detail>
