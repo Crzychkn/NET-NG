@@ -5,17 +5,58 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
+const httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+   };
+
 @Injectable({
   providedIn: 'root'
 })
 export class ItemService {
 
+   
+   //Get items
    getItems(): Observable<Item[]> {
-      this.messageService.add('ItemService: Fetched To Do List');
       return this.http.get<Item[]>(this.itemsUrl)
          .pipe(catchError(this.handleError('getItems', [])));
    }
 
+   //Get items by ID
+   getItem(id: number): Observable<Item> {
+      const url = `${this.itemsUrl}/${id}`;
+      return this.http.get<Item>(url).pipe(
+         tap(_ => this.log(`fetched item id=${id}`)),
+         catchError(this.handleError<Item>(`getItem id=${id}`))
+      );
+   }
+
+   //Update item details
+   updateItem (item: Item): Observable<any> {
+      const url = `${this.itemsUrl}/${item.id}`;
+      return this.http.put(url, item, httpOptions).pipe(
+         tap(_ => this.log(`updated item id=${item.id}`)),
+         catchError(this.handleError<any>('updateItem'))
+      );
+   }
+
+   //Post/Add new item to list
+   addItem (item: Item): Observable<Item> {
+      return this.http.post<Item>(this.itemsUrl, item, httpOptions).pipe(
+         tap((item: Item) => this.log(`added item w/ id=${item.id}`)),
+         catchError(this.handleError<Item>('addItem'))
+      );
+   }
+
+   //Delete item from list
+   deleteItem (item: Item | number): Observable<Item> {
+      const id = typeof item === 'number' ? item : item.id;
+      const url = `${this.itemsUrl}/${id}`;
+
+      return this.http.delete<Item>(url, httpOptions).pipe(
+         tap(_ => this.log(`deleted item id=${id}`)),
+         catchError(this.handleError<Item>('deleteItem'))
+      );
+   }
 
    private log(message: string) {
       this.messageService.add('ItemService: ' + message);

@@ -6,32 +6,39 @@ import { Item } from '../Item';
 import { ItemService } from '../item.service';
 
 @Component({
-  selector: 'app-item-detail',
-  templateUrl: './item-detail.component.html',
-  styleUrls: ['./item-detail.component.css']
+   selector: 'app-item-detail',
+   templateUrl: './item-detail.component.html',
+   styleUrls: ['./item-detail.component.css']
 })
 export class ItemDetailComponent implements OnInit {
 
-  @Input() item: Item;
+   @Input() item: Item;
 
-  constructor(
-  	private route: ActivatedRoute,
-	private itemService: ItemService,
-	private location: Location
-  ) { }
+   constructor(
+      private route: ActivatedRoute,
+      private itemService: ItemService,
+      private location: Location
+   ) { }
 
-  ngOnInit(): void {
-  	this.getItem();
-  }
+   ngOnInit(): void {
+      this.getItem();
+   }
 
-  getItem(): void {
-	const id = +this.route.snapshot.paramMap.get('id');
-	this.itemService.getItem(id)
-		 .subscribe(item => this.item = item);
-  }
+   //Get items to display
+   getItem(): void {
+      const id = +this.route.snapshot.paramMap.get('id');
+      this.itemService.getItem(id)
+      .subscribe(item => this.item = item);
+   }
 
-  goBack(): void {
-	this.location.back();
-  }
+   //Save details update
+   save(): void {
+      this.itemService.updateItem(this.item)
+      .subscribe(() => this.goBack());
+   }
+
+   goBack(): void {
+      this.location.back();
+   }
 
 }
